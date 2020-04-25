@@ -7,5 +7,5 @@ import org.springframework.boot.runApplication
 class ApikeyPlatformApplication
 
 fun main(args: Array<String>) {
-	runApplication<ApikeyPlatformApplication>(*args)
+    runApplication<ApikeyPlatformApplication>(*args)
 }
