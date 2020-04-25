@@ -1,4 +1,4 @@
-FROM openjdk:8-jre-alpine
+FROM openjdk:11-slim
 
 ARG version=0.1.0
 ARG hash=undefined
