@@ -1,0 +1,40 @@
+#!/bin/sh
+
+set -o errexit # Exit on error
+set -o nounset # Trigger error when expanding unset variables
+
+DEPENDENCIES="${DEPENDENCIES:-}"
+JAVA_OPTS="${JAVA_OPTS:-}"
+
+start() {
+  echo "$(date -R) Starting..."
+
+  if [ -z "$DEPENDENCIES" ]; then
+    echo "No dependencies declared."
+  else
+    for dependency in $DEPENDENCIES; do
+
+      echo "\"$dependency\""
+      host=$(echo $dependency | cut -d: -f1)
+      port=$(echo $dependency | cut -d: -f2)
+
+      if [ -z "$host" -o -z "$port" ]; then
+        echo "Invalid host:port pair in \"$DEPENDENCIES\"!"
+        exit 17
+      fi
+
+      printf "Waiting for $host to accept connections on tcp/$port\n"
+      until nc -z -v $host $port >/dev/null 2>&1 </dev/null; do
+        printf "."
+        sleep 0.5
+      done
+    done
+
+    printf "\nDependencies open for requests, starting application...\n"
+  fi
+
+  exec java ${JAVA_OPTS} \
+    -jar app.jar
+}
+
+start
