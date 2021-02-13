@@ -1,0 +1,27 @@
+version: '3.1'
+
+services:
+  apikey-platform:
+    build: .
+    container_name: apikey-platform
+    hostname: apikey-platform
+    ports:
+      - "8080:8080"
+    expose:
+      - "8080"
+    depends_on:
+      - database
+
+  database:
+    restart: always
+    image: postgres:12.2-alpine
+    container_name: postgresdb
+    hostname: postgresdb
+    ports:
+      - "5432:5432"
+    expose:
+      - "5432"
+    environment:
+      - POSTGRES_USER=apikey-user
+      - POSTGRES_PASSWORD=pass
+      - POSTGRES_DB=apikeydb
